@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:5177")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ForgotPasswordController {
 
     @Autowired
@@ -19,10 +19,10 @@ public class ForgotPasswordController {
         String email = request.getEmail();
         String response = service.forgotPassword(email);
 
-        if(!response.startsWith("Invalid")){
-            response= "http://localhost:8080/api/users/reset-password?token=" + response;
-        }
-        return response;
+        if (response.equalsIgnoreCase("Email not registered")){
+            return "Email not registered";
+             }
+        return "http://localhost:8080/api/users/reset-password?token=" + response;
     }
 
     @PutMapping("/reset-password")
