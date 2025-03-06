@@ -1,8 +1,10 @@
 package com.triptrek.triptrek.controller;
 
 
+import com.triptrek.triptrek.dto.LoginResponse;
 import com.triptrek.triptrek.dto.RegisterRequest;
 import com.triptrek.triptrek.model.User;
+import com.triptrek.triptrek.service.JwtService;
 import com.triptrek.triptrek.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +12,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin (origins = "http://localhost:5176")
+@CrossOrigin (origins = "http://localhost:5173")
 public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private JwtService jwtService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
@@ -39,13 +43,19 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public User loginUser(@RequestBody User loginDetails) {
+    public ResponseEntity<LoginResponse>  loginUser(@RequestBody User loginDetails) {
         User user = userService.findUserByEmail(loginDetails.getEmail());
         if (user != null && user.getPassword().equals(loginDetails.getPassword())) {
-            return user;
+
+            String token = jwtService.generateToken(user.getEmail());
+
+            LoginResponse loginResponse = new LoginResponse(user, token);
+
+            return ResponseEntity.ok(loginResponse);
         } else {
             throw new RuntimeException("Invalid email or password");
         }
 
     }
 }
+
