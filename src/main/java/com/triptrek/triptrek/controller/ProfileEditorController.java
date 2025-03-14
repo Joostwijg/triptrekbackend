@@ -3,30 +3,36 @@ package com.triptrek.triptrek.controller;
 
 import com.triptrek.triptrek.dto.ProfileEditorRequest;
 import com.triptrek.triptrek.model.User;
+import com.triptrek.triptrek.service.JwtService;
 import com.triptrek.triptrek.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/users/profile/edit")
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("api/users/profile")
+@CrossOrigin(origins = "http://localhost:5175")
 public class ProfileEditorController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private JwtService jwtService;
 
     @PutMapping("/edit")
-    public ResponseEntity<?> editProfile(@RequestBody ProfileEditorRequest request){
+    public ResponseEntity<?> editProfile (@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody ProfileEditorRequest request) {
         try {
-            User user = userService.findUserByEmail(request.getEmail());
+            String token = authHeader.replace("Bearer ", "");
+            String email = jwtService.extractEmail(token);
+
+            User user = userService.findUserByEmail(email);
             if (user == null) {
                 return ResponseEntity.badRequest().body("User not found");
             }
 
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
-            user.setEmail(request.getEmail());
             user.setPhoneNumber(request.getPhoneNumber());
             user.setAddress(request.getAddress());
             user.setCity(request.getCity());
@@ -42,10 +48,10 @@ public class ProfileEditorController {
             }
 
             userService.updateUser(user);
+
             return ResponseEntity.ok(user);
-        } catch (Exception e) {
+        } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 }

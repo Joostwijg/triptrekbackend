@@ -11,6 +11,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtService jwtService;
+
     public User registerUser(User user){
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new RuntimeException("Email address already in use.");
@@ -24,5 +27,13 @@ public class UserService {
 
     public User updateUser(User user){
         return userRepository.save(user);
+    }
+
+    public User findUserByToken(String token) {
+        String email = jwtService.extractEmail(token);
+        if (email == null) {
+            throw new RuntimeException("Invalid token");
+        }
+        return userRepository.findByEmail(email);
     }
 }
