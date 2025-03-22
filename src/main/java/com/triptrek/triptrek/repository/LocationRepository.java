@@ -1,4 +1,7 @@
 package com.triptrek.triptrek.repository;
 
-public interface LocationRepository {
+import com.triptrek.triptrek.model.Location;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface LocationRepository extends JpaRepository<Location, Long> {
 }
