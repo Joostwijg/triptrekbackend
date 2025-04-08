@@ -6,7 +6,7 @@ import javax.crypto.SecretKey;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 
-@Service  // ✅ Zorg ervoor dat deze annotatie aanwezig is!
+@Service
 public class JwtService {
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(
             "MijnSuperGeheimeSleutelVoorJWTMet32Tekens!".getBytes()
