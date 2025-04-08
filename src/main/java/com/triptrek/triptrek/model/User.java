@@ -10,14 +10,14 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
     private String email;
     private String password;
     private String token;
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime tokenCreationDate;
-    public Long getId(){
+    public Integer getId(){
         return id;
     }
 
@@ -33,7 +33,7 @@ public class User {
     // Getters and Setters //
 
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

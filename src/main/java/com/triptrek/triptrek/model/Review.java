@@ -20,6 +20,8 @@ public class Review {
     private User user;
 
     private int rating;
+
+
     private String comment;
     private String date;
 
