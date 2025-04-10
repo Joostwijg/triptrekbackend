@@ -25,6 +25,11 @@ public class Review {
     private String comment;
     private String date;
 
+    @Column(nullable = false)
+    private boolean approved = false;
+    public boolean isApproved() {return approved;}
+    public void setApproved(boolean approved) {this.approved = approved;}
+
     // Getters and Setters
 
     public Long getId() { return id; }
