@@ -26,6 +26,14 @@ public class Location {
     @JsonIgnore
     private List<Review> reviews;
 
+    @Column(nullable = false)
+    private boolean approved = false;
+    public boolean isApproved() { return approved; }
+    public void setApproved(boolean approved) { this.approved = approved; }
+
+    @Column(unique = true)
+    private String slug;
+
 
     // Getters and Setters
 
@@ -46,6 +54,9 @@ public class Location {
 
     public List<Review> getReviews() {return reviews;}
     public void setReviews(List<Review> reviews) {this.reviews = reviews;}
+
+    public String getSlug() {return slug;}
+    public void setSlug(String slug) {this.slug = slug;}
 
 
 }
