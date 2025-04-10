@@ -30,6 +30,8 @@ public class User {
     private String zipCode;
     private String country;
 
+    private String role = "user";
+
     // Getters and Setters //
 
 
@@ -131,5 +133,13 @@ public class User {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
