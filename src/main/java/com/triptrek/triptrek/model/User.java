@@ -11,7 +11,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String password;
     private String token;
 
@@ -31,6 +34,10 @@ public class User {
     private String country;
 
     private String role = "user";
+
+    @Column(name = "registration_date")
+    private LocalDateTime registrationDate;
+
 
     // Getters and Setters //
 
@@ -135,11 +142,11 @@ public class User {
         this.country = country;
     }
 
-    public String getRole() {
-        return role;
-    }
+    public String getRole() {        return role;    }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public void setRole(String role) {        this.role = role;    }
+
+    public LocalDateTime getRegistrationDate() { return registrationDate; }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) { this.registrationDate = registrationDate; }
 }
