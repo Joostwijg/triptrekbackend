@@ -15,14 +15,17 @@ public class UserService {
     private JwtService jwtService;
 
     public User registerUser(User user){
+        String email = user.getEmail().toLowerCase();
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new RuntimeException("Email address already in use.");
         }
+
+        user.setEmail(email);
         return userRepository.save(user);
     }
 
     public User findUserByEmail(String email){
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email.toLowerCase());
     }
 
     public User updateUser(User user){
@@ -34,6 +37,6 @@ public class UserService {
         if (email == null) {
             throw new RuntimeException("Invalid token");
         }
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email.toLowerCase());
     }
 }

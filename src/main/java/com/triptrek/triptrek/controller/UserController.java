@@ -11,9 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin (origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5175")
 public class UserController {
 
     @Autowired
@@ -33,6 +36,7 @@ public class UserController {
             User user = new User();
             user.setEmail(request.getEmail());
             user.setPassword(request.getPassword());
+            user.setRegistrationDate(LocalDateTime.now());
 
             // Registreer de gebruiker
             User registeredUser = userService.registerUser(user);
