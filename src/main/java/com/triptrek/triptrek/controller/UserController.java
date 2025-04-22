@@ -9,61 +9,49 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:5175")
 public class UserController {
 
     @Autowired
     private UserService userService;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
-        try {
-            // Controleer of het wachtwoord en confirmPassword overeenkomen
-            if (!request.getPassword().equals(request.getConfirmPassword())) {
-                return ResponseEntity.badRequest().body("Passwords do not match!");
-            }
-
-            // Maak een nieuwe gebruiker op basis van de aanvraag
-            User user = new User();
-            user.setEmail(request.getEmail());
-            user.setPassword(request.getPassword());
-            user.setRegistrationDate(LocalDateTime.now());
-
-            // Registreer de gebruiker
-            User registeredUser = userService.registerUser(user);
-            return ResponseEntity.ok(registeredUser);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body("Passwords do not match!");
         }
+
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRegistrationDate(LocalDateTime.now());
+
+        User registeredUser = userService.registerUser(user);
+        return ResponseEntity.ok(registeredUser);
     }
 
-
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse>  loginUser(@RequestBody User loginDetails) {
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody User loginDetails) {
         User user = userService.findUserByEmail(loginDetails.getEmail());
 
-        if (user != null && user.getPassword().equals(loginDetails.getPassword())) {
+        if (user != null && passwordEncoder.matches(loginDetails.getPassword(), user.getPassword())) {
             String token = jwtService.generateToken(user.getEmail());
-            System.out.println(token);
-
             user.setToken(token);
             userService.updateUser(user);
-
-            LoginResponse loginResponse = new LoginResponse(user, token);
             return ResponseEntity.ok(new LoginResponse(user, token));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(null, "Invalid email or password"));
         }
-
     }
 
     @GetMapping("/profile")
@@ -81,7 +69,4 @@ public class UserController {
 
         return ResponseEntity.ok(user);
     }
-
-
 }
-
