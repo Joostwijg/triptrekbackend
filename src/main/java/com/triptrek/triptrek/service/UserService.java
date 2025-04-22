@@ -4,15 +4,19 @@ import com.triptrek.triptrek.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.triptrek.triptrek.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
-    private JwtService jwtService;
+    JwtService jwtService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public User registerUser(User user){
         String email = user.getEmail().toLowerCase();
@@ -21,6 +25,7 @@ public class UserService {
         }
 
         user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

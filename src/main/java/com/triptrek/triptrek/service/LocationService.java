@@ -13,7 +13,7 @@ import java.util.Optional;
 public class LocationService {
 
     @Autowired
-    private LocationRepository locationRepository;
+    LocationRepository locationRepository;
 
     public List<Location> getAllLocations() {
         return locationRepository.findAll();

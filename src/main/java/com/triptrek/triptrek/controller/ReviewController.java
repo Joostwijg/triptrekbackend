@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/reviews")
-@CrossOrigin(origins = "http://localhost:5175")
 public class ReviewController {
 
     @Autowired
@@ -31,7 +30,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.addReview(review));
     }
 
-    @GetMapping ("/pending")
+    @GetMapping("/pending")
     public List<Review> getPendingReviews() {
         return reviewService.getPendingReviews();
     }
@@ -51,5 +50,4 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Review not found or already accepted");
         }
     }
-
 }

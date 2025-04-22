@@ -8,11 +8,8 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(
-            "MijnSuperGeheimeSleutelVoorJWTMet32Tekens!".getBytes()
-    );
-
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 uur geldig
+    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("MySuperSecurityKeyForJWTWith32Characters".getBytes());
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60;
 
     public String generateToken(String email) {
         return Jwts.builder()
@@ -29,10 +26,10 @@ public class JwtService {
             Claims claims = parser.parseSignedClaims(token).getPayload();
             return claims.getSubject();
         } catch (ExpiredJwtException e) {
-            System.out.println("Token is verlopen!");
+            System.out.println("Token expired!");
             return null;
         } catch (Exception e) {
-            System.out.println("Fout bij token-parsing: " + e.getMessage());
+            System.out.println("Error at token-parsing: " + e.getMessage());
             return null;
         }
     }

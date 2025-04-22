@@ -1,6 +1,5 @@
 package com.triptrek.triptrek.controller;
 
-
 import com.triptrek.triptrek.dto.ProfileEditorRequest;
 import com.triptrek.triptrek.model.User;
 import com.triptrek.triptrek.service.JwtService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/users/profile")
-@CrossOrigin(origins = "http://localhost:5175")
 public class ProfileEditorController {
 
     @Autowired
@@ -21,7 +19,8 @@ public class ProfileEditorController {
     private JwtService jwtService;
 
     @PutMapping("/edit")
-    public ResponseEntity<?> editProfile (@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody ProfileEditorRequest request) {
+    public ResponseEntity<?> editProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+                                         @RequestBody ProfileEditorRequest request) {
         try {
             String token = authHeader.replace("Bearer ", "");
             String email = jwtService.extractEmail(token);
@@ -50,7 +49,7 @@ public class ProfileEditorController {
             userService.updateUser(user);
 
             return ResponseEntity.ok(user);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
